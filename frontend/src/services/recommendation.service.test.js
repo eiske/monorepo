@@ -16,6 +16,7 @@ describe('recommendationService', () => {
 
     expect(recommendations).toHaveLength(1);
     expect(recommendations[0].name).toBe('RD Conversas');
+    expect(recommendations[0].relevanceScore).toBeGreaterThan(0);
   });
 
   test('Retorna recomendações corretas para MultipleProducts com base nas preferências selecionadas', () => {
@@ -42,6 +43,7 @@ describe('recommendationService', () => {
       'RD Station CRM',
       'RD Station Marketing',
     ]);
+    expect(recommendations[0].relevanceScore).toBeGreaterThan(recommendations[1].relevanceScore);
   });
 
   test('Retorna apenas um produto para SingleProduct com mais de um produto de match', () => {
@@ -64,6 +66,7 @@ describe('recommendationService', () => {
 
     expect(recommendations).toHaveLength(1);
     expect(recommendations[0].name).toBe('RD Station Marketing');
+    expect(recommendations[0].relevanceScore).toBeGreaterThan(0);
   });
 
   test('Retorna o último match em caso de empate para SingleProduct', () => {
@@ -79,5 +82,40 @@ describe('recommendationService', () => {
 
     expect(recommendations).toHaveLength(1);
     expect(recommendations[0].name).toBe('RD Conversas');
+    expect(recommendations[0].relevanceScore).toBeGreaterThan(0);
+  });
+
+  test('Retorna todos os produtos quando não há seleções', () => {
+    const formData = {
+      selectedPreferences: [],
+      selectedFeatures: [],
+      selectedRecommendationType: 'MultipleProducts',
+    };
+
+    const recommendations = recommendationService.getRecommendations(
+      formData,
+      mockProducts
+    );
+
+    expect(recommendations).toHaveLength(4);
+    expect(recommendations[0].relevanceScore).toBe(0);
+  });
+
+  test('Inclui score de relevância e detalhes de matches nos resultados', () => {
+    const formData = {
+      selectedPreferences: ['Integração fácil com ferramentas de e-mail'],
+      selectedFeatures: ['Gestão de leads e oportunidades'],
+      selectedRecommendationType: 'SingleProduct',
+    };
+
+    const recommendations = recommendationService.getRecommendations(
+      formData,
+      mockProducts
+    );
+
+    expect(recommendations[0].relevanceScore).toBeDefined();
+    expect(recommendations[0].matchDetails).toBeDefined();
+    expect(recommendations[0].matchDetails.preferences).toContain('Integração fácil com ferramentas de e-mail');
+    expect(recommendations[0].matchDetails.features).toContain('Gestão de leads e oportunidades');
   });
 });
