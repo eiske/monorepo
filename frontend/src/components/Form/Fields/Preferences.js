@@ -3,11 +3,11 @@
 import React, { useCallback, memo } from 'react';
 import Checkbox from '../../shared/Checkbox';
 
-const Preferences = memo(function Preferences({
+const Preferences = memo(({
   preferences,
   selectedPreferences = [],
   onPreferenceChange,
-}) {
+}) => {
   const handlePreferenceChange = useCallback((preference) => {
     const updatedPreferences = selectedPreferences.includes(preference)
       ? selectedPreferences.filter((pref) => pref !== preference)

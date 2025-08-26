@@ -8,7 +8,6 @@ import useForm from '../../hooks/useForm';
 
 function Form({ onSubmit }) {
   const { preferences, features } = useProducts();
-  console.log({preferences, features});
   const { formData, handleChange } = useForm({
     selectedPreferences: [],
     selectedFeatures: [],

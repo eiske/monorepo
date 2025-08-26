@@ -1,7 +1,7 @@
 import React, { useCallback, memo } from 'react';
 import Checkbox from '../../shared/Checkbox';
 
-const Features = memo(function Features({ features, selectedFeatures = [], onFeatureChange }) {
+const Features = memo(({ features, selectedFeatures = [], onFeatureChange }) => {
   const handleFeatureChange = useCallback((feature) => {
     const updatedFeatures = selectedFeatures.includes(feature)
       ? selectedFeatures.filter((pref) => pref !== feature)
