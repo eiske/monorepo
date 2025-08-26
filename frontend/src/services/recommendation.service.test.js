@@ -118,4 +118,116 @@ describe('recommendationService', () => {
     expect(recommendations[0].matchDetails.preferences).toContain('Integração fácil com ferramentas de e-mail');
     expect(recommendations[0].matchDetails.features).toContain('Gestão de leads e oportunidades');
   });
+
+  test('Retorna array vazio quando não há produtos', () => {
+    const formData = {
+      selectedPreferences: ['Integração fácil com ferramentas de e-mail'],
+      selectedFeatures: ['Gestão de leads e oportunidades'],
+      selectedRecommendationType: 'MultipleProducts',
+    };
+
+    const recommendations = recommendationService.getRecommendations(formData, []);
+    expect(recommendations).toHaveLength(0);
+  });
+
+  test('Retorna array vazio quando produtos é undefined', () => {
+    const formData = {
+      selectedPreferences: ['Integração fácil com ferramentas de e-mail'],
+      selectedFeatures: ['Gestão de leads e oportunidades'],
+      selectedRecommendationType: 'MultipleProducts',
+    };
+
+    const recommendations = recommendationService.getRecommendations(formData, undefined);
+    expect(recommendations).toHaveLength(0);
+  });
+
+  test('Retorna array vazio quando produtos é null', () => {
+    const formData = {
+      selectedPreferences: ['Integração fácil com ferramentas de e-mail'],
+      selectedFeatures: ['Gestão de leads e oportunidades'],
+      selectedRecommendationType: 'MultipleProducts',
+    };
+
+    const recommendations = recommendationService.getRecommendations(formData, null);
+    expect(recommendations).toHaveLength(0);
+  });
+
+  test('Lida com formData undefined usando valores padrão', () => {
+    const recommendations = recommendationService.getRecommendations(undefined, mockProducts);
+    
+    expect(recommendations).toHaveLength(4);
+    expect(recommendations[0].relevanceScore).toBe(0);
+  });
+
+  test('Lida com formData null usando valores padrão', () => {
+    const recommendations = recommendationService.getRecommendations(null, mockProducts);
+    
+    expect(recommendations).toHaveLength(4);
+    expect(recommendations[0].relevanceScore).toBe(0);
+  });
+
+  test('Retorna produto com apenas matches de preferências', () => {
+    const formData = {
+      selectedPreferences: ['Integração fácil com ferramentas de e-mail'],
+      selectedFeatures: [],
+      selectedRecommendationType: 'SingleProduct',
+    };
+
+    const recommendations = recommendationService.getRecommendations(formData, mockProducts);
+    
+    expect(recommendations).toHaveLength(1);
+    expect(recommendations[0].name).toBe('RD Station CRM');
+    expect(recommendations[0].relevanceScore).toBeGreaterThan(0);
+  });
+
+  test('Retorna produto com apenas matches de features', () => {
+    const formData = {
+      selectedPreferences: [],
+      selectedFeatures: ['Gestão de leads e oportunidades'],
+      selectedRecommendationType: 'SingleProduct',
+    };
+
+    const recommendations = recommendationService.getRecommendations(formData, mockProducts);
+    
+    expect(recommendations).toHaveLength(1);
+    expect(recommendations[0].name).toBe('RD Station CRM');
+    expect(recommendations[0].relevanceScore).toBeGreaterThan(0);
+  });
+
+  test('Lida com tipo de recomendação inválido retornando todos os produtos', () => {
+    const formData = {
+      selectedPreferences: ['Integração fácil com ferramentas de e-mail'],
+      selectedFeatures: ['Gestão de leads e oportunidades'],
+      selectedRecommendationType: 'TipoInvalido',
+    };
+
+    const recommendations = recommendationService.getRecommendations(formData, mockProducts);
+    
+    expect(recommendations).toHaveLength(4);
+    expect(recommendations[0].relevanceScore).toBeGreaterThan(0);
+  });
+
+  test('Lida com produtos sem arrays de preferences ou features', () => {
+    const productsWithoutArrays = [
+      {
+        id: 1,
+        name: 'Produto Teste',
+        category: 'Teste',
+        preferences: undefined,
+        features: null,
+      },
+    ];
+
+    const formData = {
+      selectedPreferences: ['Preferência'],
+      selectedFeatures: ['Feature'],
+      selectedRecommendationType: 'SingleProduct',
+    };
+
+    const recommendations = recommendationService.getRecommendations(formData, productsWithoutArrays);
+    
+    expect(recommendations).toHaveLength(1);
+    expect(recommendations[0].relevanceScore).toBe(0);
+  });
+
 });
