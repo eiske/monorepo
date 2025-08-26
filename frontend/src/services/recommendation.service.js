@@ -64,12 +64,9 @@ const getRecommendations = (
     return b.matchDetails.totalMatches - a.matchDetails.totalMatches;
   });
 
-  // CRITÉRIO 1: Filtrar baseado no tipo de recomendação selecionado
   if (selectedRecommendationType === 'SingleProduct') {
-    // Retornar apenas o produto com maior score
     return sortedProducts.length > 0 ? [sortedProducts[0]] : [];
   } else if (selectedRecommendationType === 'MultipleProducts') {
-    // Retornar todos os produtos ordenados por relevância
     return sortedProducts;
   }
 
