@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Form from './components/Form/Form';
 import RecommendationList from './components/RecommendationList/RecommendationList';
+import useRecommendations from './hooks/useRecommendations';
+import useProducts from './hooks/useProducts';
+import recommendationService from './services/recommendation.service';
 
 function App() {
-  const [recommendations, setRecommendations ] = useState([])
+  const { products } = useProducts();
+  const { recommendations, setRecommendations } = useRecommendations(products);
+
+  const handleFormSubmit = (formData) => {
+    const newRecommendations = recommendationService.getRecommendations(formData, products);
+    setRecommendations(newRecommendations);
+  };
 
   /**
    * Dadas atualizações no formulário, necessário atualizar a lista de recomendações
@@ -19,7 +28,7 @@ function App() {
           </p>
         </div>
         <div>
-          <Form />
+          <Form onSubmit={handleFormSubmit} />
         </div>
         <div>
           <RecommendationList recommendations={recommendations} />
