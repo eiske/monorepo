@@ -83,13 +83,13 @@ Para completar este teste, você deve concentrar-se principalmente em três arqu
 
 ## Critérios de Aceite
 
-1. O serviço de recomendação de produtos deve ser capaz de receber as preferências e funcionalidades desejadas do usuário através de um formulário.
-2. O serviço deve retornar recomendações de produtos com base nas preferências e funcionalidades selecionadas pelo usuário.
-3. Se o tipo de recomendação selecionado for "SingleProduct", o serviço deve retornar apenas um produto que corresponda melhor às preferências e funcionalidades do usuário.
-4. Se o tipo de recomendação selecionado for "MultipleProducts", o serviço deve retornar uma lista de produtos que correspondam às preferências e funcionalidades do usuário.
-5. Em caso de empate na seleção de produtos com base nas preferências e funcionalidades do usuário, o serviço deve retornar o último produto que atende aos critérios de seleção.
-6. O serviço deve ser capaz de lidar com diferentes tipos de preferências e funcionalidades selecionadas pelo usuário.
-7. O serviço deve ser modular e facilmente extensível para futuras atualizações e adições de funcionalidades.
+1. ✅ O serviço de recomendação de produtos deve ser capaz de receber as preferências e funcionalidades desejadas do usuário através de um formulário.
+2. ✅ O serviço deve retornar recomendações de produtos com base nas preferências e funcionalidades selecionadas pelo usuário.
+3. ✅ Se o tipo de recomendação selecionado for "SingleProduct", o serviço deve retornar apenas um produto que corresponda melhor às preferências e funcionalidades do usuário.
+4. ✅ Se o tipo de recomendação selecionado for "MultipleProducts", o serviço deve retornar uma lista de produtos que correspondam às preferências e funcionalidades do usuário.
+5. ✅ Em caso de empate na seleção de produtos com base nas preferências e funcionalidades do usuário, o serviço deve retornar o último produto que atende aos critérios de seleção.
+6. ✅ O serviço deve ser capaz de lidar com diferentes tipos de preferências e funcionalidades selecionadas pelo usuário.
+7. ✅ O serviço deve ser modular e facilmente extensível para futuras atualizações e adições de funcionalidades.
 
 Certifique-se de que todos os critérios de aceite são atendidos durante o desenvolvimento do projeto.
 
