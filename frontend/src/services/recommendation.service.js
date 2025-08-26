@@ -12,7 +12,15 @@ const getRecommendations = (
 
   // Se não há seleções, retornar todos os produtos
   if (selectedPreferences.length === 0 && selectedFeatures.length === 0) {
-    return products;
+    return products.map(product => ({
+      ...product,
+      relevanceScore: 0,
+      matchDetails: {
+        preferences: [],
+        features: [],
+        totalMatches: 0
+      }
+    }));
   }
 
   // Calcular score para cada produto
@@ -61,13 +69,16 @@ const getRecommendations = (
     if (b.relevanceScore !== a.relevanceScore) {
       return b.relevanceScore - a.relevanceScore;
     }
-    return b.matchDetails.totalMatches - a.matchDetails.totalMatches;
+    if (b.matchDetails.totalMatches !== a.matchDetails.totalMatches) {
+      return b.matchDetails.totalMatches - a.matchDetails.totalMatches;
+    }
+    return b.id - a.id;
   });
 
   if (selectedRecommendationType === 'SingleProduct') {
     return sortedProducts.length > 0 ? [sortedProducts[0]] : [];
   } else if (selectedRecommendationType === 'MultipleProducts') {
-    return sortedProducts;
+    return sortedProducts.filter(product => product.relevanceScore > 0);
   }
 
   // Fallback: retornar todos os produtos se tipo não for reconhecido
