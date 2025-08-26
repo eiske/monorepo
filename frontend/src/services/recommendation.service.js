@@ -1,14 +1,14 @@
 // getRecommendations.js
 
 const getRecommendations = (
-  formData = { selectedPreferences: [], selectedFeatures: [] },
+  formData = { selectedPreferences: [], selectedFeatures: [], selectedRecommendationType: 'MultipleProducts' },
   products
 ) => {
   if (!products || products.length === 0) {
     return [];
   }
 
-  const { selectedPreferences = [], selectedFeatures = [] } = formData;
+  const { selectedPreferences = [], selectedFeatures = [], selectedRecommendationType = 'MultipleProducts' } = formData;
 
   // Se não há seleções, retornar todos os produtos
   if (selectedPreferences.length === 0 && selectedFeatures.length === 0) {
@@ -64,6 +64,16 @@ const getRecommendations = (
     return b.matchDetails.totalMatches - a.matchDetails.totalMatches;
   });
 
+  // CRITÉRIO 1: Filtrar baseado no tipo de recomendação selecionado
+  if (selectedRecommendationType === 'SingleProduct') {
+    // Retornar apenas o produto com maior score
+    return sortedProducts.length > 0 ? [sortedProducts[0]] : [];
+  } else if (selectedRecommendationType === 'MultipleProducts') {
+    // Retornar todos os produtos ordenados por relevância
+    return sortedProducts;
+  }
+
+  // Fallback: retornar todos os produtos se tipo não for reconhecido
   return sortedProducts;
 };
 
