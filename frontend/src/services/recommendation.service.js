@@ -8,9 +8,9 @@ const getRecommendations = (
     return [];
   }
 
-  const { selectedPreferences = [], selectedFeatures = [], selectedRecommendationType = 'MultipleProducts' } = formData;
+  const safeFormData = formData || { selectedPreferences: [], selectedFeatures: [], selectedRecommendationType: 'MultipleProducts' };
+  const { selectedPreferences = [], selectedFeatures = [], selectedRecommendationType = 'MultipleProducts' } = safeFormData;
 
-  // Se não há seleções, retornar todos os produtos
   if (selectedPreferences.length === 0 && selectedFeatures.length === 0) {
     return products.map(product => ({
       ...product,
@@ -32,8 +32,9 @@ const getRecommendations = (
     
     // Calcular score baseado em preferências
     if (selectedPreferences.length > 0) {
+      const productPreferences = product.preferences || [];
       const preferenceMatches = selectedPreferences.filter(pref => 
-        product.preferences.includes(pref)
+        productPreferences.includes(pref)
       );
       const preferenceScore = (preferenceMatches.length / selectedPreferences.length) * 100;
       score += preferenceScore * PREFERENCE_WEIGHT;
@@ -41,8 +42,9 @@ const getRecommendations = (
     
     // Calcular score baseado em features
     if (selectedFeatures.length > 0) {
+      const productFeatures = product.features || [];
       const featureMatches = selectedFeatures.filter(feature => 
-        product.features.includes(feature)
+        productFeatures.includes(feature)
       );
       const featureScore = (featureMatches.length / selectedFeatures.length) * 100;
       score += featureScore * FEATURE_WEIGHT;
@@ -52,14 +54,17 @@ const getRecommendations = (
     const totalWeight = PREFERENCE_WEIGHT + FEATURE_WEIGHT;
     const relevanceScore = Math.round(score / totalWeight);
     
+    const productPreferences = product.preferences || [];
+    const productFeatures = product.features || [];
+    
     return {
       ...product,
       relevanceScore,
       matchDetails: {
-        preferences: selectedPreferences.filter(pref => product.preferences.includes(pref)),
-        features: selectedFeatures.filter(feature => product.features.includes(feature)),
-        totalMatches: selectedPreferences.filter(pref => product.preferences.includes(pref)).length + 
-                     selectedFeatures.filter(feature => product.features.includes(feature)).length
+        preferences: selectedPreferences.filter(pref => productPreferences.includes(pref)),
+        features: selectedFeatures.filter(feature => productFeatures.includes(feature)),
+        totalMatches: selectedPreferences.filter(pref => productPreferences.includes(pref)).length + 
+                     selectedFeatures.filter(feature => productFeatures.includes(feature)).length
       }
     };
   });
@@ -81,8 +86,9 @@ const getRecommendations = (
     return sortedProducts.filter(product => product.relevanceScore > 0);
   }
 
-  // Fallback: retornar todos os produtos se tipo não for reconhecido
   return sortedProducts;
 };
 
-export default { getRecommendations };
+const recommendationService = { getRecommendations };
+
+export default recommendationService;
