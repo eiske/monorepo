@@ -7,12 +7,12 @@ import useProducts from '../../hooks/useProducts';
 import useForm from '../../hooks/useForm';
 
 function Form({ onSubmit }) {
-  const { preferences, features, products } = useProducts();
+  const { preferences, features } = useProducts();
   console.log({preferences, features});
   const { formData, handleChange } = useForm({
     selectedPreferences: [],
     selectedFeatures: [],
-    selectedRecommendationType: '',
+    selectedRecommendationType: 'MultipleProducts',
   });
 
   const handleSubmit = (e) => {
@@ -21,6 +21,12 @@ function Form({ onSubmit }) {
     // Validar se há pelo menos uma seleção
     if (formData.selectedPreferences.length === 0 && formData.selectedFeatures.length === 0) {
       alert('Por favor, selecione pelo menos uma preferência ou funcionalidade para obter recomendações.');
+      return;
+    }
+    
+    // Validar se o tipo de recomendação foi selecionado
+    if (!formData.selectedRecommendationType) {
+      alert('Por favor, selecione um tipo de recomendação.');
       return;
     }
     
@@ -48,6 +54,7 @@ function Form({ onSubmit }) {
         }
       />
       <RecommendationType
+        selectedValue={formData.selectedRecommendationType}
         onRecommendationTypeChange={(selected) =>
           handleChange('selectedRecommendationType', selected)
         }
