@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Form from './components/Form/Form';
 import RecommendationList from './components/RecommendationList/RecommendationList';
 import useRecommendations from './hooks/useRecommendations';
@@ -9,10 +9,10 @@ function App() {
   const { products } = useProducts();
   const { recommendations, setRecommendations } = useRecommendations(products);
 
-  const handleFormSubmit = (formData) => {
+  const handleFormSubmit = useCallback((formData) => {
     const newRecommendations = recommendationService.getRecommendations(formData, products);
     setRecommendations(newRecommendations);
-  };
+  }, [products, setRecommendations]);
 
   /**
    * Dadas atualizações no formulário, necessário atualizar a lista de recomendações

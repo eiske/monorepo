@@ -1,17 +1,14 @@
-import React, { useState } from 'react';
+import React, { useCallback, memo } from 'react';
 import Checkbox from '../../shared/Checkbox';
 
-function Features({ features, selectedFeatures = [], onFeatureChange }) {
-  const [currentFeatures, setCurrentFeatures] = useState(selectedFeatures)
+const Features = memo(function Features({ features, selectedFeatures = [], onFeatureChange }) {
+  const handleFeatureChange = useCallback((feature) => {
+    const updatedFeatures = selectedFeatures.includes(feature)
+      ? selectedFeatures.filter((pref) => pref !== feature)
+      : [...selectedFeatures, feature];
 
-  const handleFeatureChange = (feature) => {
-    const updatedFeatures = currentFeatures.includes(feature)
-      ? currentFeatures.filter((pref) => pref !== feature)
-      : [...currentFeatures, feature];
-
-    setCurrentFeatures(updatedFeatures);
     onFeatureChange(updatedFeatures);
-  };
+  }, [selectedFeatures, onFeatureChange]);
 
   return (
     <div className="mb-4">
@@ -21,7 +18,7 @@ function Features({ features, selectedFeatures = [], onFeatureChange }) {
           <li key={index} className="mb-2">
             <Checkbox
               value={feature}
-              checked={currentFeatures.includes(feature)}
+              checked={selectedFeatures.includes(feature)}
               onChange={() => handleFeatureChange(feature)}
               className="text-green-500"
             >
@@ -32,6 +29,6 @@ function Features({ features, selectedFeatures = [], onFeatureChange }) {
       </ul>
     </div>
   );
-}
+});
 
 export default Features;

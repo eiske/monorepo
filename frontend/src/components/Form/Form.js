@@ -1,6 +1,6 @@
 // Form.js
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Preferences, Features, RecommendationType } from './Fields';
 import { SubmitButton } from './SubmitButton';
 import useProducts from '../../hooks/useProducts';
@@ -15,7 +15,7 @@ function Form({ onSubmit }) {
     selectedRecommendationType: 'MultipleProducts',
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = useCallback((e) => {
     e.preventDefault();
     
     // Validar se há pelo menos uma seleção
@@ -34,7 +34,7 @@ function Form({ onSubmit }) {
     if (onSubmit) {
       onSubmit(formData);
     }
-  };
+  }, [formData, onSubmit]);
 
   return (
     <form
@@ -43,12 +43,14 @@ function Form({ onSubmit }) {
     >
       <Preferences
         preferences={preferences}
+        selectedPreferences={formData.selectedPreferences}
         onPreferenceChange={(selected) =>
           handleChange('selectedPreferences', selected)
         }
       />
       <Features
         features={features}
+        selectedFeatures={formData.selectedFeatures}
         onFeatureChange={(selected) =>
           handleChange('selectedFeatures', selected)
         }

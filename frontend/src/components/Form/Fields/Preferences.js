@@ -1,23 +1,20 @@
 // Preferences.js
 
-import React, { useState } from 'react';
+import React, { useCallback, memo } from 'react';
 import Checkbox from '../../shared/Checkbox';
 
-function Preferences({
+const Preferences = memo(function Preferences({
   preferences,
   selectedPreferences = [],
   onPreferenceChange,
 }) {
-  const [currentPreferences, setCurrentPreferences] = useState(selectedPreferences)
+  const handlePreferenceChange = useCallback((preference) => {
+    const updatedPreferences = selectedPreferences.includes(preference)
+      ? selectedPreferences.filter((pref) => pref !== preference)
+      : [...selectedPreferences, preference];
 
-  const handlePreferenceChange = (preference) => {
-    const updatedPreferences = currentPreferences.includes(preference)
-      ? currentPreferences.filter((pref) => pref !== preference)
-      : [...currentPreferences, preference];
-
-    setCurrentPreferences(updatedPreferences);
     onPreferenceChange(updatedPreferences);
-  };
+  }, [selectedPreferences, onPreferenceChange]);
 
   return (
     <div className="mb-4">
@@ -27,7 +24,7 @@ function Preferences({
           <li key={index} className="mb-2">
             <Checkbox
               value={preference}
-              checked={currentPreferences.includes(preference)}
+              checked={selectedPreferences.includes(preference)}
               onChange={() => handlePreferenceChange(preference)}
               className="text-blue-500"
             >
@@ -38,6 +35,6 @@ function Preferences({
       </ul>
     </div>
   );
-}
+});
 
 export default Preferences;
